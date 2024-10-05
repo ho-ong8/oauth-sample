@@ -21,6 +21,9 @@ public class OAuthAttributes {
         // naver
         if ("naver".equals(registrationId)) {
             return oauthNaver("id", attributes);
+        // kakao
+        } else if ("kakao".equals(registrationId)) {
+            return oauthKakao("id", attributes);
         }
 
         // google
@@ -46,6 +49,20 @@ public class OAuthAttributes {
                 .email((String) response.get("email"))
                 .provider("Naver")
                 .attributes(response)
+                .nameAttributeKey(userNameAttributeName)
+                .build();
+    }
+
+    // kakao
+    private static OAuthAttributes oauthKakao(String userNameAttributeName, Map<String, Object> attributes) {
+        Map<String, Object> response = (Map<String, Object>) attributes.get("kakao_account");
+        Map<String, Object> account = (Map<String, Object>) response.get("profile");
+
+        return OAuthAttributes.builder()
+                .name((String) account.get("nickname"))
+                .email((String) response.get("email"))
+                .provider("Kakao")
+                .attributes(attributes)
                 .nameAttributeKey(userNameAttributeName)
                 .build();
     }
